@@ -14,8 +14,8 @@ app.secret_key = 'pqiwdjf'
 # info about signing into the google cloud sql database
 db_user = 'root'
 db_password = ''
-db_name = 'RandomLinks'
-db_connection_name = 'seismic-gecko-326618:us-east4:nfl-prediction-challenge'
+db_name = 'main'
+db_connection_name = 'random-links-api:us-east4:random-links'
 
 deployed = True
 
