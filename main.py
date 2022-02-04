@@ -20,7 +20,7 @@ db_password = ''
 db_name = 'main'
 db_connection_name = 'random-links-api:us-east4:random-links'
 
-deployed = False
+deployed = True
 
 # Establishes connection with Google Cloud SQL database
 def get_connection():
@@ -37,7 +37,7 @@ def get_connection():
 
 	return conn
 
-@app.route("/fun-link", methods=['GET', 'POST'])
+@app.route("/fun-link", methods=['GET', 'POST', 'DELETE'])
 def fun_link():
     # get connection and cursor
     conn = get_connection()
@@ -64,6 +64,8 @@ def fun_link():
             link=rand_link,
             description=rand_description
         ), 200
+
+    # add a link to the database
     if request.method == 'POST':
         new_link = request.form['link']
         new_description = request.form['description']
@@ -88,12 +90,38 @@ def fun_link():
         return jsonify(
             status="Failure - an error occurred when adding " + new_link + " to fun links"
         )
+
+    # delete a link from the database
+    if request.method == 'DELETE':
+        to_delete = request.form['link']
+
+        try:
+            result = cur.execute('DELETE FROM fun_links WHERE link LIKE \'%' + to_delete + '%\'')
+
+            # if there was no link deleted
+            if result < 1:
+                return jsonify(
+                    status='Failure - Could not find a link like ' + to_delete + ' in the database'
+                )
+
+            conn.commit()
+            conn.close()
+
+            # success response
+            return jsonify(
+                status='Success - Deleted ' + to_delete + ' from the database' 
+            )
+        except Exception as e:
+            pass
+        
+        # failure response
+        return jsonify(
+            status='Failure - There was some error when trying to delete the link from the database'
+        )
             
 
-        
 
-
-@app.route("/game-link", methods=['GET', 'POST'])
+@app.route("/game-link", methods=['GET', 'POST', 'DELETE'])
 def game_link():
     # get connection and cursor
     conn = get_connection()
@@ -120,6 +148,8 @@ def game_link():
             link=rand_link,
             description=rand_description
         ), 200
+
+    # add a link to the database
     if request.method == 'POST':
         new_link = request.form['link']
         new_description = request.form['description']
@@ -145,7 +175,35 @@ def game_link():
             status="Failure - an error occurred when adding " + new_link + " to game links"
         )
 
-@app.route("/news-link", methods=['GET', 'POST'])
+    # delete a link from the database
+    if request.method == 'DELETE':
+        to_delete = request.form['link']
+
+        try:
+            result = cur.execute('DELETE FROM game_links WHERE link LIKE \'%' + to_delete + '%\'')
+
+            # if there was no link deleted
+            if result < 1:
+                return jsonify(
+                    status='Failure - Could not find a link like ' + to_delete + ' in the database'
+                )
+
+            conn.commit()
+            conn.close()
+
+            # success response
+            return jsonify(
+                status='Success - Deleted ' + to_delete + ' from the database' 
+            )
+        except Exception as e:
+            pass
+        
+        # failure response
+        return jsonify(
+            status='Failure - There was some error when trying to delete the link from the database'
+        )
+
+@app.route("/news-link", methods=['GET', 'POST', 'DELETE'])
 def news_link():
     # get connection and cursor
     conn = get_connection()
@@ -172,6 +230,8 @@ def news_link():
             link=rand_link,
             description=rand_description
         ), 200
+
+    # add a link to the database
     if request.method == 'POST':
         new_link = request.form['link']
         new_description = request.form['description']
@@ -195,4 +255,32 @@ def news_link():
             pass
         return jsonify(
             status="Failure - an error occurred when adding " + new_link + " to news links"
+        )
+
+    # delete a link from the database
+    if request.method == 'DELETE':
+        to_delete = request.form['link']
+
+        try:
+            result = cur.execute('DELETE FROM news_links WHERE link LIKE \'%' + to_delete + '%\'')
+
+            # if there was no link deleted
+            if result < 1:
+                return jsonify(
+                    status='Failure - Could not find a link like ' + to_delete + ' in the database'
+                )
+
+            conn.commit()
+            conn.close()
+
+            # success response
+            return jsonify(
+                status='Success - Deleted ' + to_delete + ' from the database' 
+            )
+        except Exception as e:
+            pass
+        
+        # failure response
+        return jsonify(
+            status='Failure - There was some error when trying to delete the link from the database'
         )
