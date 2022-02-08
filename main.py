@@ -37,7 +37,15 @@ def get_connection():
 
 	return conn
 
-@app.route("/fun-link", methods=['GET', 'POST', 'DELETE'])
+# Given a string representing a link, return boolean representing if it is valid
+def check_valid_link(link):
+    try:
+        requests.get(link)
+        return True
+    except:
+        return False
+
+@app.route("/fun-link", methods=['GET', 'POST', 'PATCH', 'DELETE'])
 def fun_link():
     # get connection and cursor
     conn = get_connection()
@@ -70,9 +78,7 @@ def fun_link():
         new_link = request.form['link']
         new_description = request.form['description']
 
-        try:
-            requests.get(new_link)
-        except Exception as e:
+        if not check_valid_link(new_link):
             return jsonify(
                 status="Failure - " + new_link + " is an invalid url"
             ), 406
@@ -90,6 +96,63 @@ def fun_link():
         return jsonify(
             status="Failure - an error occurred when adding " + new_link + " to fun links"
         )
+
+    # Update a link in the database
+    if request.method == 'PATCH':
+        current_link = request.form['link']
+        new_description = request.form['description']
+
+        try:
+            # if the link is to be changed as well as the description
+            if 'new_link' in request.form:
+                new_link = request.form['new_link']
+
+                if not check_valid_link(new_link):
+                    return jsonify(
+                        status="Failure - " + new_link + " is an invalid url"
+                    ), 406
+
+                result = cur.execute('UPDATE fun_links SET link=%s, description=%s WHERE link LIKE %s', (new_link, new_description, '%' + current_link + '%'))
+
+                # if there was no link found to update
+                if result < 1:
+                    return jsonify(
+                        status='Failure - Could not find a link like ' + current_link + ' in the database'
+                    )
+
+                conn.commit()
+                conn.close()
+
+                # success response
+                return jsonify(
+                    status='Success - Updated ' + current_link + ' in the database, New link: ' + new_link + ', New description: ' + new_description 
+                )
+
+            else:
+                result = cur.execute('UPDATE fun_links SET description=%s WHERE link LIKE %s', (new_description, '%' + current_link + '%'))
+
+                # if there was no link found to update
+                if result < 1:
+                    return jsonify(
+                        status='Failure - Could not find a link like ' + current_link + ' in the database'
+                    )
+
+                conn.commit()
+                conn.close()
+
+                # success response
+                return jsonify(
+                    status='Success - Updated ' + current_link + ' in the database, New description: ' + new_description 
+                )
+
+        except:
+            pass
+            
+        # failure response
+        return jsonify(
+            status='Failure - There was some error when trying to delete the link from the database'
+        )
+
 
     # delete a link from the database
     if request.method == 'DELETE':
@@ -111,7 +174,7 @@ def fun_link():
             return jsonify(
                 status='Success - Deleted ' + to_delete + ' from the database' 
             )
-        except Exception as e:
+        except:
             pass
         
         # failure response
@@ -121,7 +184,7 @@ def fun_link():
             
 
 
-@app.route("/game-link", methods=['GET', 'POST', 'DELETE'])
+@app.route("/game-link", methods=['GET', 'POST', 'DELETE', 'PATCH'])
 def game_link():
     # get connection and cursor
     conn = get_connection()
@@ -154,9 +217,7 @@ def game_link():
         new_link = request.form['link']
         new_description = request.form['description']
 
-        try:
-            requests.get(new_link)
-        except Exception as e:
+        if not check_valid_link(new_link):
             return jsonify(
                 status="Failure - " + new_link + " is an invalid url"
             ), 406
@@ -174,6 +235,64 @@ def game_link():
         return jsonify(
             status="Failure - an error occurred when adding " + new_link + " to game links"
         )
+
+
+    # Update a link in the database
+    if request.method == 'PATCH':
+        current_link = request.form['link']
+        new_description = request.form['description']
+
+        try:
+            # if the link is to be changed as well as the description
+            if 'new_link' in request.form:
+                new_link = request.form['new_link']
+
+                if not check_valid_link(new_link):
+                    return jsonify(
+                        status="Failure - " + new_link + " is an invalid url"
+                    ), 406
+
+                result = cur.execute('UPDATE game_links SET link=%s, description=%s WHERE link LIKE %s', (new_link, new_description, '%' + current_link + '%'))
+
+                # if there was no link found to update
+                if result < 1:
+                    return jsonify(
+                        status='Failure - Could not find a link like ' + current_link + ' in the database'
+                    )
+
+                conn.commit()
+                conn.close()
+
+                # success response
+                return jsonify(
+                    status='Success - Updated ' + current_link + ' in the database, New link: ' + new_link + ', New description: ' + new_description 
+                )
+
+            else:
+                result = cur.execute('UPDATE game_links SET description=%s WHERE link LIKE %s', (new_description, '%' + current_link + '%'))
+
+                # if there was no link found to update
+                if result < 1:
+                    return jsonify(
+                        status='Failure - Could not find a link like ' + current_link + ' in the database'
+                    )
+
+                conn.commit()
+                conn.close()
+
+                # success response
+                return jsonify(
+                    status='Success - Updated ' + current_link + ' in the database, New description: ' + new_description 
+                )
+
+        except:
+            pass
+            
+        # failure response
+        return jsonify(
+            status='Failure - There was some error when trying to delete the link from the database'
+        )
+
 
     # delete a link from the database
     if request.method == 'DELETE':
@@ -195,7 +314,7 @@ def game_link():
             return jsonify(
                 status='Success - Deleted ' + to_delete + ' from the database' 
             )
-        except Exception as e:
+        except:
             pass
         
         # failure response
@@ -203,7 +322,7 @@ def game_link():
             status='Failure - There was some error when trying to delete the link from the database'
         )
 
-@app.route("/news-link", methods=['GET', 'POST', 'DELETE'])
+@app.route("/news-link", methods=['GET', 'POST', 'DELETE', 'PATCH'])
 def news_link():
     # get connection and cursor
     conn = get_connection()
@@ -236,9 +355,7 @@ def news_link():
         new_link = request.form['link']
         new_description = request.form['description']
 
-        try:
-            requests.get(new_link)
-        except Exception as e:
+        if not check_valid_link(new_link):
             return jsonify(
                 status="Failure - " + new_link + " is an invalid url"
             ), 406
@@ -256,6 +373,64 @@ def news_link():
         return jsonify(
             status="Failure - an error occurred when adding " + new_link + " to news links"
         )
+
+    
+    # Update a link in the database
+    if request.method == 'PATCH':
+        current_link = request.form['link']
+        new_description = request.form['description']
+
+        try:
+            # if the link is to be changed as well as the description
+            if 'new_link' in request.form:
+                new_link = request.form['new_link']
+
+                if not check_valid_link(new_link):
+                    return jsonify(
+                        status="Failure - " + new_link + " is an invalid url"
+                    ), 406
+
+                result = cur.execute('UPDATE news_links SET link=%s, description=%s WHERE link LIKE %s', (new_link, new_description, '%' + current_link + '%'))
+
+                # if there was no link found to update
+                if result < 1:
+                    return jsonify(
+                        status='Failure - Could not find a link like ' + current_link + ' in the database'
+                    )
+
+                conn.commit()
+                conn.close()
+
+                # success response
+                return jsonify(
+                    status='Success - Updated ' + current_link + ' in the database, New link: ' + new_link + ', New description: ' + new_description 
+                )
+
+            else:
+                result = cur.execute('UPDATE news_links SET description=%s WHERE link LIKE %s', (new_description, '%' + current_link + '%'))
+
+                # if there was no link found to update
+                if result < 1:
+                    return jsonify(
+                        status='Failure - Could not find a link like ' + current_link + ' in the database'
+                    )
+
+                conn.commit()
+                conn.close()
+
+                # success response
+                return jsonify(
+                    status='Success - Updated ' + current_link + ' in the database, New description: ' + new_description 
+                )
+
+        except:
+            pass
+            
+        # failure response
+        return jsonify(
+            status='Failure - There was some error when trying to delete the link from the database'
+        )
+
 
     # delete a link from the database
     if request.method == 'DELETE':
@@ -277,7 +452,7 @@ def news_link():
             return jsonify(
                 status='Success - Deleted ' + to_delete + ' from the database' 
             )
-        except Exception as e:
+        except:
             pass
         
         # failure response

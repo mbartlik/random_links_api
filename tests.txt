@@ -1,0 +1,117 @@
+GET https://random-links-api.uk.r.appspot.com/fun-link
+*** see that a random link is returned
+
+POST https://random-links-api.uk.r.appspot.com/fun-link
+link - https://www.adp.com/
+description - testing with the ADP website
+
+PATCH https://random-links-api.uk.r.appspot.com/fun-link
+link - https://www.adp.com/
+description - testing updating the description
+
+Check database that description is updated
+
+PATCH https://random-links-api.uk.r.appspot.com/fun-link
+link - https://www.adp.com/
+description - testing updating the link
+new_link - https://www.adp.com/about-adp/why-adp.aspx
+
+Check database that description and link is updated
+
+DELETE https://random-links-api.uk.r.appspot.com/fun-link
+link - https://www.adp.com/
+
+POST https://random-links-api.uk.r.appspot.com/fun-link
+link - https://www.adp.com/invalid-url
+description - testing with the ADP website
+*** Make sure an error is returned about invalid url
+
+PATCH https://random-links-api.uk.r.appspot.com/fun-link
+link - https://www.adp.com/invalid-url
+description - testing with the ADP website
+*** Make sure an error is returned about the link not being in the database
+
+DELETE https://random-links-api.uk.r.appspot.com/fun-link
+link - https://www.adp.com/invalid-url
+*** Make sure an error is returned about the link not being in the database
+
+
+---------------------
+GET https://random-links-api.uk.r.appspot.com/game-link
+*** see that a random link is returned
+
+POST https://random-links-api.uk.r.appspot.com/game-link
+link - https://www.adp.com/
+description - testing with the ADP website
+
+PATCH https://random-links-api.uk.r.appspot.com/game-link
+link - https://www.adp.com/
+description - testing updating the description
+
+Check database that description is updated
+
+PATCH https://random-links-api.uk.r.appspot.com/game-link
+link - https://www.adp.com/
+description - testing updating the link
+new_link - https://www.adp.com/about-adp/why-adp.aspx
+
+Check database that description and link is updated
+
+DELETE https://random-links-api.uk.r.appspot.com/game-link
+link - https://www.adp.com/
+
+POST https://random-links-api.uk.r.appspot.com/game-link
+link - https://www.adp.com/invalid-url
+description - testing with the ADP website
+*** Make sure an error is returned about invalid url
+
+PATCH https://random-links-api.uk.r.appspot.com/game-link
+link - https://www.adp.com/invalid-url
+description - testing with the ADP website
+*** Make sure an error is returned about the link not being in the database
+
+DELETE https://random-links-api.uk.r.appspot.com/game-link
+link - https://www.adp.com/invalid-url
+*** Make sure an error is returned about the link not being in the database
+
+
+------------------------------------
+
+https://random-links-api.uk.r.appspot.com
+
+GET https://random-links-api.uk.r.appspot.com/news-link
+*** see that a random link is returned
+
+POST https://random-links-api.uk.r.appspot.com/news-link
+link - https://www.adp.com/
+description - testing with the ADP website
+
+PATCH https://random-links-api.uk.r.appspot.com/news-link
+link - https://www.adp.com/
+description - testing updating the description
+
+Check database that description is updated
+
+PATCH https://random-links-api.uk.r.appspot.com/news-link
+link - https://www.adp.com/
+description - testing updating the link
+new_link - https://www.adp.com/about-adp/why-adp.aspx
+
+Check database that description and link is updated
+
+DELETE https://random-links-api.uk.r.appspot.com/news-link
+link - https://www.adp.com/
+
+POST https://random-links-api.uk.r.appspot.com/news-link
+link - https://www.adp.com/invalid-url
+description - testing with the ADP website
+*** Make sure an error is returned about invalid url
+
+PATCH https://random-links-api.uk.r.appspot.com/news-link
+link - https://www.adp.com/invalid-url
+description - testing with the ADP website
+*** Make sure an error is returned about the link not being in the database
+
+DELETE https://random-links-api.uk.r.appspot.com/news-link
+link - https://www.adp.com/invalid-url
+*** Make sure an error is returned about the link not being in the database
